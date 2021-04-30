@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import {HardhatUserConfig} from 'hardhat/types';
+import { HardhatUserConfig } from 'hardhat/types';
 import 'hardhat-deploy';
 import 'hardhat-deploy-ethers';
 import 'hardhat-gas-reporter';
@@ -8,8 +8,8 @@ import 'hardhat-typechain';
 import 'solidity-coverage';
 import '@eth-optimism/hardhat-ovm';
 
-import {accounts, keys, node_url} from './utils/network';
-import {utils} from 'ethers';
+import { accounts, keys, node_url } from './utils/network';
+import { utils } from 'ethers';
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -50,15 +50,15 @@ const config: HardhatUserConfig = {
       accounts: accounts(process.env.HARDHAT_FORK),
       forking: process.env.HARDHAT_FORK
         ? {
-            url: node_url(process.env.HARDHAT_FORK),
-            blockNumber: process.env.HARDHAT_FORK_NUMBER
-              ? parseInt(process.env.HARDHAT_FORK_NUMBER)
-              : undefined,
-          }
+          url: node_url(process.env.HARDHAT_FORK),
+          blockNumber: process.env.HARDHAT_FORK_NUMBER
+            ? parseInt(process.env.HARDHAT_FORK_NUMBER)
+            : undefined,
+        }
         : undefined,
     },
     optimism: {
-      url: 'https://goerli.optimism.io/',
+      url: 'http://127.0.0.1:8545',
       accounts: accounts(),
       gasPrice: 0,
       blockGasLimit: 8999999,
@@ -131,10 +131,10 @@ const config: HardhatUserConfig = {
   },
   external: process.env.HARDHAT_FORK
     ? {
-        deployments: {
-          hardhat: ['deployments/' + process.env.HARDHAT_FORK],
-        },
-      }
+      deployments: {
+        hardhat: ['deployments/' + process.env.HARDHAT_FORK],
+      },
+    }
     : undefined,
 };
 export default config;
