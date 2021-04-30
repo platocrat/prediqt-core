@@ -12,6 +12,7 @@ import {
   abi as SWAP_ROUTER_ABI,
   bytecode as SWAP_ROUTER_BYTECODE,
 } from '@uniswap/v3-periphery/artifacts/contracts/SwapRouter.sol/SwapRouter.json';
+import { ethers } from 'hardhat';
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const {deployments, getNamedAccounts} = hre;
@@ -24,6 +25,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     from: deployer,
     args: [factory.address, weth],
     log: true,
+    gasPrice: ethers.BigNumber.from('0'),
+    gasLimit: 8999999,
     contract: {
       abi: SWAP_ROUTER_ABI,
       bytecode: SWAP_ROUTER_BYTECODE,

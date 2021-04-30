@@ -1,12 +1,12 @@
-import {expect} from './chai-setup';
+import { expect } from './chai-setup';
 import {
   deployments,
   ethers,
   getNamedAccounts,
   getUnnamedAccounts,
 } from 'hardhat';
-import {DummyERC20, MarketFactory} from '../typechain';
-import {setupUser, setupUsers} from './utils';
+import { DummyERC20, MarketFactory } from '../typechain';
+import { setupUser, setupUsers } from './utils';
 
 // TODO: move to AMM tests
 export enum FeeAmount {
@@ -15,7 +15,7 @@ export enum FeeAmount {
   HIGH = 10000,
 }
 
-export const TICK_SPACINGS: {[amount in FeeAmount]: number} = {
+export const TICK_SPACINGS: { [amount in FeeAmount]: number } = {
   [FeeAmount.LOW]: 10,
   [FeeAmount.MEDIUM]: 60,
   [FeeAmount.HIGH]: 200,
@@ -24,12 +24,14 @@ export const TICK_SPACINGS: {[amount in FeeAmount]: number} = {
 const setup = deployments.createFixture(async () => {
   await deployments.fixture('MarketFactory');
   await deployments.fixture('AMM');
-  const {deployer} = await getNamedAccounts();
+  const { deployer } = await getNamedAccounts();
 
   await deployments.deploy('DummyERC20', {
     from: deployer,
     args: [],
     log: true,
+    gasPrice: ethers.BigNumber.from('0'),
+    gasLimit: 8999999
   });
   const contracts = {
     MarketFactory: <MarketFactory>await ethers.getContract('MarketFactory'),
@@ -49,8 +51,10 @@ describe('Market Dapp', function () {
   const IPFS = 'QmWWQSuPMS6aXCbZKpEjPHPUZN2NjB3YrhJTHsV4X3vb2t';
 
   it('Should be able to create a market', async function () {
-    const {deployer} = await setup();
-    await deployer.USDC.mint(deployer.address, 10000);
+    const { deployer } = await setup();
+    await deployer.USDC.mint(deployer.address, 10000, {
+      gasPrice: ethers.BigNumber.from('0'), gasLimit: 8999999
+    });
 
     await deployer.MarketFactory.create(
       IPFS,
@@ -58,7 +62,10 @@ describe('Market Dapp', function () {
       deployer.address,
       deployer.address,
       resolution,
-      deployer.USDC.address
+      deployer.USDC.address,
+      {
+        gasPrice: ethers.BigNumber.from('0'), gasLimit: 8999999
+      }
     );
     expect(await deployer.MarketFactory.marketsLength()).to.equal(1);
 
@@ -75,8 +82,12 @@ describe('Market Dapp', function () {
     // mint
     expect(await token1Contract.balanceOf(deployer.address)).to.equal(0);
     expect(await token2Contract.balanceOf(deployer.address)).to.equal(0);
-    await deployer.USDC.approve(marketContract.address, 10000);
-    await marketContract.mint(10000);
+    await deployer.USDC.approve(marketContract.address, 10000, {
+      gasPrice: ethers.BigNumber.from('0'), gasLimit: 8999999
+    });
+    await marketContract.mint(10000, {
+      gasPrice: ethers.BigNumber.from('0'), gasLimit: 8999999
+    });
     expect(await deployer.USDC.balanceOf(deployer.address)).to.equal(0);
     expect(await token1Contract.balanceOf(deployer.address)).to.equal(10000);
     expect(await token2Contract.balanceOf(deployer.address)).to.equal(10000);
@@ -110,17 +121,25 @@ describe('Market Dapp', function () {
     ]);
     expect(await marketContract.status()).to.equal(2);
     await expect(
-      marketContract.claim(deployer.address, 1000)
+      marketContract.claim(deployer.address, 1000, {
+        gasPrice: ethers.BigNumber.from('0'), gasLimit: 8999999
+      })
     ).to.be.revertedWith('Market: TOKEN_DOES_NOT_EXIST');
 
-    await token2Contract.burn(10000); // TODO: test contract is not attached to market
+    await token2Contract.burn(10000, {
+      gasPrice: ethers.BigNumber.from('0'), gasLimit: 8999999
+    }); // TODO: test contract is not attached to market
     expect(await deployer.USDC.balanceOf(deployer.address)).to.equal(0);
     expect(await token2Contract.balanceOf(deployer.address)).to.equal(0);
-    await token1Contract.burn(10000);
+    await token1Contract.burn(10000, {
+      gasPrice: ethers.BigNumber.from('0'), gasLimit: 8999999
+    });
     expect(await token1Contract.balanceOf(deployer.address)).to.equal(0);
     expect(await deployer.USDC.balanceOf(deployer.address)).to.equal(10000);
 
-    await token1Contract.burn(5000).catch((e: Error) => {
+    await token1Contract.burn(5000, {
+      gasPrice: ethers.BigNumber.from('0'), gasLimit: 8999999
+    }).catch((e: Error) => {
       expect(e).to.be.an('error');
     });
 
@@ -128,7 +147,10 @@ describe('Market Dapp', function () {
       deployer.UniswapFactory.createPool(
         token1Contract.address,
         token2Contract.address,
-        FeeAmount.MEDIUM
+        FeeAmount.MEDIUM,
+        {
+          gasPrice: ethers.BigNumber.from('0'), gasLimit: 8999999
+        }
       )
     ).to.emit(deployer.UniswapFactory, 'PoolCreated');
   });

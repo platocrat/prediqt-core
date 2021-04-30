@@ -58,7 +58,7 @@ const config: HardhatUserConfig = {
         : undefined,
     },
     optimism: {
-      url: 'http://127.0.0.1:8545',
+      url: 'https://goerli.optimism.io/',
       accounts: accounts(),
       gasPrice: 0,
       blockGasLimit: 8999999,

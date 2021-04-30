@@ -4,6 +4,7 @@ import {
   abi as FACTORY_ABI,
   bytecode as FACTORY_BYTECODE,
 } from '@uniswap/v3-core/artifacts/contracts/UniswapV3Factory.sol/UniswapV3Factory.json';
+import { ethers } from 'hardhat';
 
 /* OPTIMISM
 import {
@@ -21,6 +22,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     from: deployer,
     args: [],
     log: true,
+    gasPrice: ethers.BigNumber.from('0'), 
+    gasLimit: 8999999, 
     contract: {
       abi: FACTORY_ABI,
       bytecode: FACTORY_BYTECODE,
