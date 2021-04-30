@@ -74,8 +74,8 @@
     "fork:test": "node ./scripts.js fork:test"
   },
   "dependencies": {
-    "@eth-optimism/hardhat-ovm": "^0.0.2",
+    "@eth-optimism/hardhat-ovm": "^0.0.3",
     "@uniswap/v3-core": "^1.0.0-rc.2",
-    "@uniswap/v3-periphery": "^1.0.0-beta.21"
+    "@uniswap/v3-periphery": "^1.0.0-beta.23"
   }
 }

@@ -1,5 +1,13 @@
 import {HardhatRuntimeEnvironment} from 'hardhat/types';
 import {DeployFunction} from 'hardhat-deploy/types';
+
+/* OPTIMISM
+import {
+  abi as SWAP_ROUTER_ABI,
+  bytecode as SWAP_ROUTER_BYTECODE,
+} from '../external/contracts/SwapRouter.sol/SwapRouter.json';
+*/
+
 import {
   abi as SWAP_ROUTER_ABI,
   bytecode as SWAP_ROUTER_BYTECODE,
